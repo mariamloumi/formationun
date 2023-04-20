@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}<style>
+
+    .content {
+        padding: 0 18px;
+        background-color: white;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+    .collapsible:after {
+        content: '\25BC'; /* Unicode character for "plus" sign (^) */
+        font-size: 13px;
+        color: gray;
+        float: right;
+        margin-left: 5px;
+    }
+    .active:after {
+        content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+</style>
+        {% endblock %}
+
+{% block body %}
+
+   <h1>Collapsible</h1>
+ <div>
+        {% for filcourse in filcourses %}
+            {% if filcourse.prec == 0 %}
+            
+                <div>
+                    <button type="button" class="collapsible">{{ filcourse.filiere }}</button>
+                    <div class="content">
+                     {% for filcourse1 in filcourses %}
+                            {% if filcourse1.prec == filcourse.num %}
+                                <div>
+                                    <button type="button" class="collapsible">{{ filcourse1.filiere }}</button>
+                                    <div class="content">
+                                     {% for filcourse2 in filcourses %}
+                            {% if filcourse2.prec == filcourse1.num %}
+                                <div>
+                                        <a href="{{ url('matieres',{"ansem":filcourse2.succ}) }}">{{filcourse2.filiere}}</a><br/>
+                                        </div>
+                            {% endif %}
+                              {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                              {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <script>
+       var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+</script>
+{% endblock %}
+{#{% for filcourse1 in filcourses %}
+                            {% if filcourse1.prec == filcourse.num %}
+                                <div>
+                                <p>123</p>
+                                    <button type="button" class="collapsible">{{ filcourse1.filiere }}</button>
+                                    <div class="content">
+                                        <a href="{{ filcourse1.succ }}">1er semestre</a><br/>
+                                        <a href="{{ filcourse1.succ }}">2eme semestre</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}#}

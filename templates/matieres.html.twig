@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}<style>
+</style>
+        {% endblock %}
+
+{% block body %}
+<div>
+        {% for matiere in matieres %}
+          <div>
+            <a href="{{ url('courstd',{"anesem":matiere.ansem,"nom":matiere.nom}) }}">{{matiere.nom}}</a><br/>
+                                        </div>
+                    
+                              {% endfor %}
+{% endblock %}

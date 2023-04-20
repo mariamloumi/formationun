@@ -1,0 +1,15 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+add_cours:
+    path: /courstd
+    controller: App\Controller\dbController::addcours
+collapsible:
+    path: /collapsible
+    controller: App\Controller\dbController::index
+matieres:
+    path: /matieres/{ansem}
+    controller: App\Controller\dbController::matieres
+courstd:
+    path: /courstd/{anesem}/{nom}
+    controller: App\Controller\dbController::courstd
