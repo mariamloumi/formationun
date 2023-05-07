@@ -1,0 +1,323 @@
+{#{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<style>
+</style>
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Ajouter un cours</h1>
+    {{ form_start(form, {'attr': {'id': 'cours-form'}}) }}
+    {{ form_row(form.anesem) }}
+    {{ form_row(form.matiere) }}
+    {{ form_row(form.nom) }}
+  
+    <button type="submit" class="btn btn-primary w-100" formnovalidate>Ajouter</button>
+    
+    {{ form_end(form) }}
+   
+   
+  <script>
+    const anesemSelectEl = document.getElementById('form_anesem');
+    const matiereSelectEl = document.getElementById('form_matiere');
+
+    anesemSelectEl.addEventListener('change', function() {
+        const selectedValue = anesemSelectEl.value;
+        $.ajax({
+            type: 'POST',
+            url: '{{ path('ajoutcours') }}',
+            data: { anesem: selectedValue },
+            dataType: 'json',
+            success: function(data) {
+                var options = '';
+                for (var id in data) {
+                    options += '<option value="' +  data[id] + '">' + data[id] + '</option>';
+                }
+                $('#form_matiere').html(options);
+                matiereSelectEl.required = true; // Use boolean value instead of string
+                console.log(options);
+                // Trigger a change event on the matiere select field
+                const event = new Event('change');
+                matiereSelectEl.dispatchEvent(event);
+            }
+        });
+    });
+
+    matiereSelectEl.addEventListener('change', function() {
+        const selectedValue = matiereSelectEl.value;
+        console.log(selectedValue);
+        $.ajax({
+            type: 'POST',
+            url: '{{ path('ajoutcours') }}',
+            data: { matiere: selectedValue },
+            dataType: 'json',
+        });
+    });
+
+    // Commenting out the form submit event listener since it's not used in the current code
+    //{#formEl.addEventListener('submit', function(event) {
+    //    event.preventDefault();
+    //    const formData = new FormData(formEl);
+    //    const selectedValue = matiereSelectEl.value;
+    //    formData.append('matiere', selectedValue);
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: '{{ path('ajoutcours') }}',
+    //        data: formData,
+    //        dataType: 'json',
+    //        contentType: false,
+    //        processData: false,
+    //        success: function(response) {
+    //            const url = '{{ path('test', {'matiere': matiereSelectEl.value}) }}';
+    //            window.location.replace(url);
+    //        },
+    //        error: function(error) {
+    //            console.log(error);
+    //            // Handle error response here
+    //        }
+    //    });
+    //});#}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<style>
+</style>
+{% endblock %}
+
+{% block body %}
+<div>
+  <h1>Ajouter un cours</h1>
+{{ form_start(form, {'attr': {'id': 'cours-form'}}) }}
+{{ form_row(form.anesem) }}
+{{ form_row(form.matiere, {'choices': choices}) }}
+{{ form_row(form.nom) }}
+{{ form_row(form.submit) }}
+
+
+
+{{ form_end(form) }}
+
+ <script>
+    const anesemSelectEl = document.getElementById('form_anesem');
+    const matiereSelectEl = document.getElementById('form_matiere');
+    const formEl = document.getElementById('cours-form');
+
+    anesemSelectEl.addEventListener('change', function() {
+        const selectedValue = anesemSelectEl.value;
+        $.ajax({
+            type: 'POST',
+            url: '{{ path('getmat') }}',
+            data: { anesem: selectedValue },
+            dataType: 'json',
+            success: function(data) {
+                var options = '';
+                for (var id in data) {
+                    options += '<option value="' +  data[id] + '">' + data[id] + '</option>';
+                }
+                $('#form_matiere').html(options);
+                matiereSelectEl.required = true; // Use boolean value instead of string
+                console.log(options);
+                // Trigger a change event on the matiere select field
+                const event = new Event('change');
+                matiereSelectEl.dispatchEvent(event);
+            }
+        });
+    });
+
+    formEl.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    console.log(anesemSelectEl.value,'--',matiereSelectEl.value);
+
+    const formData = new FormData();
+    formData.append('anesem', anesemSelectEl.value);
+    formData.append('matiere', matiereSelectEl.value);
+
+    const nomInputEl = document.getElementById('form_nom');
+    if (nomInputEl.files.length > 0) {
+        formData.append('nom', nomInputEl.files[0]);
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '{{ path('ajoutcours') }}',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+          
+            alert('Cours ajouté avec succès. Voulez-vous continuer ?\n' );
+        
+        }
+    });
+});
+
+</script>
+
+
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+{#{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<style>
+</style>
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Ajouter un cours</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.anesem) }}
+    {{ form_row(form.matiere) }}
+    {{ form_row(form.nom) }}
+  
+    <button type="submit" class="btn btn-primary w-100" formnovalidate>Ajouter</button>
+    
+    {{ form_end(form) }}
+   
+   
+  <script>
+    const anesemSelectEl = document.getElementById('form_anesem');
+    const matiereSelectEl = document.getElementById('form_matiere');
+
+    anesemSelectEl.addEventListener('change', function() {
+        const selectedValue = anesemSelectEl.value;
+        $.ajax({
+            type: 'POST',
+            url: '{{ path('ajoutcours') }}',
+            data: { anesem: selectedValue },
+            dataType: 'json',
+            success: function(data) {
+                var options = '';
+                for (var id in data) {
+                    options += '<option value="' +  data[id] + '">' + data[id] + '</option>';
+                }
+                $('#form_matiere').html(options);
+                matiereSelectEl.required = true; // Use boolean value instead of string
+                console.log(options);
+                // Trigger a change event on the matiere select field
+                const event = new Event('change');
+                matiereSelectEl.dispatchEvent(event);
+            }
+        });
+    });
+
+    matiereSelectEl.addEventListener('change', function() {
+        const selectedValue = matiereSelectEl.value;
+        console.log(selectedValue);
+        $.ajax({
+            type: 'POST',
+            url: '{{ path('ajoutcours') }}',
+            data: { matiere: selectedValue },
+            dataType: 'json',
+             });
+    });
+</script>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+---------------------------------------------------------------
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}<style>
+</style>
+        {% endblock %}
+
+{% block body %}
+<div>
+         <h1>Ajouter un cours</h1>
+         {{ form_start(form) }}
+                {{ form_row(form.niveau) }}
+                {{ form_row(form.Matiere) }}
+                
+
+                <button type="submit" class="btn btn-primary w-100" formnovalidate>Ajouter</button>
+               
+{{ form_end(form) }}
+        <p id='selected-option'>
+
+</p>
+           <script>
+           
+      const niveauSelectEl = document.getElementById('form_niveau');
+    const selectedOptionEl = document.getElementById('selected-option');
+
+   /* niveauSelectEl.addEventListener('change', function() {
+        const selectedValue = niveauSelectEl.value;
+                
+   
+
+        selectedOptionEl.textContent =`You selected: ${selectedValue}`;
+        
+    });*/
+  
+    niveauSelectEl.addEventListener('change', function() {
+
+        $.ajax({
+            type: 'POST',
+            url: 'dbController',
+            data: { niveau: selectedValue },
+            dataType: 'json',
+            success: function(data) {
+                var options = '';
+
+                for (var id in data) {
+                    options += '<option value="' + id + '">' + data[id] + '</option>';
+                }
+
+                $('#select-matiere').html(options);
+                selectedOptionEl.textContent =options;
+        
+            }
+        });
+    });
+
+
+/*          
+
+// Listen to the DOMContentLoaded event to ensure that the DOM is fully loaded before executing the script
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Listen to the change event of the niveau select element
+    niveauSelectEl.addEventListener('change', function(e) {
+
+        // Get the parent form element
+        const formEl = niveauSelectEl.closest('form');
+
+        // Fetch the updated form data based on the selected niveau
+        fetch(formEl.action, {
+            method: formEl.method,
+            body: new FormData(formEl)
+        })
+        .then(response => response.text())
+        .then(html => {
+
+            // Parse the HTML response to a DOM object
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Get the updated Matiere field from the response and replace the existing one with it
+            const newMatiereFormFieldEl = doc.getElementById('form_Matiere');
+            newMatiereFormFieldEl.addEventListener('change', function(e) {
+                e.target.classList.remove('is-invalid');
+            });
+            document.getElementById('form_Matiere').replaceWith(newMatiereFormFieldEl);
+        })
+        .catch(function (err) {
+            console.warn('Something went wrong.', err);
+        });
+    });
+});*/
+
+    </script>
+
+{% endblock %}
+#}

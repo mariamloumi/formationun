@@ -19,6 +19,7 @@ class Matiere
 
    
     /**
+     * @ORM\ManyToOne(targetEntity=Matiere::class)
      * @ORM\Column(type="string", length=30)
      */
     private $nom;

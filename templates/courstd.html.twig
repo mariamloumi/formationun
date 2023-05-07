@@ -7,7 +7,7 @@
 <div>
         {% for matiere in matieres %}
           <div>
-            <a href="">{{matiere.nom}}</a><br/>
+           <a href="{{ asset('assets/docs/' ~ matiere.nom) }}">{{ matiere.nom }}</a><br/>
                                         </div>
                     
                               {% endfor %}

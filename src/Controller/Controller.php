@@ -17,6 +17,15 @@ class Controller extends AbstractController
             'controller_name' => 'Controller',
         ]);
     }
+    /**
+     * @Route("/test", name="test")
+     */
+    public function test(): Response
+    {
+        return $this->render('index.html.twig', [
+            'controller_name' => 'Controller',
+        ]);
+    }
 }
 
 

@@ -13,3 +13,17 @@ matieres:
 courstd:
     path: /courstd/{anesem}/{nom}
     controller: App\Controller\dbController::courstd
+dbController:
+    path: /dbController
+    controller: App\Controller\dbController\ajtc
+
+ajoutcours:
+    path: /ajoutcours
+    methods: [POST,GET]
+    controller: App\Controller\dbController::ajtc
+getmat:
+    path: /getmat
+    controller: App\Controller\dbController::getMatieres
+test:
+    path: /test/{matiere}
+    controller: App\Controller\dbController::test
