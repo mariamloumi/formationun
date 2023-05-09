@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<TITLE>Affichage simple en PHP</TITLE>
+<link REL="stylesheet" TYPE="text/css"
+      HREF="https://fabien-torre.fr/include/css/ft-v1.css">
+</HEAD>
+<BODY>
+<DIV CLASS="page">
+<H1>Affichage simple en PHP</H1>
+<BR>
+<BR>
+<CENTER>
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+<?php
+echo ("Bonjour le monde !\n");
+echo ("Cet affichage est produit par PHP.\n");
+?>
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+</CENTER>
+<BR>
+<BR>
+<OL>
+<LI> Pour insérer du PHP dans un document HTML, on peut utiliser les
+    balises <TT>&lt;?php</TT> et <TT>?&gt;</TT> pour délimiter le code.
+<LI> On utilise la fonction <TT>echo</TT> pour écrire un texte dans
+    une page.
+<LI> \n symbolise le passage à la ligne.
+</OL>
+
+<BR><BR><BR>
+
+</DIV>
+<?php
+$now = time();
+$date2 = strtotime('2012-08-14 16:01:05');
+echo $date2;
+$diff = abs($now - $date2); // abs pour avoir la valeur absolute, ainsi éviter d'avoir une différence négative
+$y=$diff/31536000;
+echo $y;
+function dateDiff($date1, $date2){
+$diff = abs($date1 - $date2); // abs pour avoir la valeur absolute, ainsi éviter d'avoir une différence négative
+$retour = array();
+$tmp = $diff;
+$retour['second'] = $tmp % 60;
+$tmp = floor( ($tmp - $retour['second']) /60 );
+
+$retour['minute'] = $tmp % 60;
+$tmp = floor( ($tmp - $retour['minute'])/60 );
+
+$retour['hour'] = $tmp % 24;
+$tmp = floor( ($tmp - $retour['hour'])/60 );
+
+$retour['day'] = $tmp;
+return $retour;
+}
+
+// Test de la fonction
+//print_r( dateDiff($now, $date2) );echo "<br>";
+
+?>
+<A HREF="http://localhost/PHP/\">Back To Home page</A>
+</BODY>
+</HTML>

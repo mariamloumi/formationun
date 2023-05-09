@@ -1,7 +1,44 @@
 {% extends 'base.html.twig' %}
- {% block stylesheets %}<style>
+{% block stylesheets %}
+    <link rel="stylesheet" href={{asset("assets/css/collapsible.css")}}>
+    <link rel="stylesheet" href={{asset("assets/css/style.css")}}>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js" integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/450c9bb9e7.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation:wght@600&display=swap" rel="stylesheet">
 
-    .content {
+<style>
+    #drop{
+        border: 1px solid #ccc;
+        width: 150px;
+        padding: 0;
+    }
+    #drop ul{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+    }
+    #drop ul li{
+        margin: 0;
+        padding: 0;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom:1px solid #ccc ;
+        width: 100%;
+    }
+    .disp{
+        display: none;
+    }
+     .content {
         padding: 0 18px;
         background-color: white;
         max-height: 0;
@@ -18,43 +55,130 @@
     .active:after {
         content: "\2796"; /* Unicode character for "minus" sign (-) */
     }
+    .but{
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+     .but  a{
+height: 50px;
+display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(100, 148, 237, 0.30);
+  border-radius: 25px;
+  text-decoration: none;
+  color: cornflowerblue;
+  font-weight: 800;
+  font-size: 1.3rem;
+  width: 250px;
+   }
 </style>
-        {% endblock %}
-
-{% block body %}
-
-   <h1>Collapsible</h1>
- <div>
-        {% for filcourse in filcourses %}
-            {% if filcourse.prec == 0 %}
+ {% endblock %}
+ {% block body %}
+   <body>
+    
+         <div class="asideNav" id="asideNav" onmouseenter="f1()" onmouseleave="f2()">
             
-                <div>
-                    <button type="button" class="collapsible">{{ filcourse.filiere }}</button>
-                    <div class="content">
-                     {% for filcourse1 in filcourses %}
-                            {% if filcourse1.prec == filcourse.num %}
-                                <div>
-                                    <button type="button" class="collapsible">{{ filcourse1.filiere }}</button>
-                                    <div class="content">
-                                     {% for filcourse2 in filcourses %}
-                            {% if filcourse2.prec == filcourse1.num %}
-                                <div>
-                                        <a href="{{ url('matieres',{"ansem":filcourse2.succ}) }}">{{filcourse2.filiere}}</a><br/>
-                                        </div>
-                            {% endif %}
-                              {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                              {% endfor %}
+            <a href=" #"><img src="assets\image\icons8-page-d’accueil-32.png"  alt="">Accueil</a>
+           <a href=" collapsible"><img src="assets\image\icons8-télécharger-le-rapport-de-graphique-24.png" alt="">Formation universitaire</a>
+           <a href=" #"><img src="assets\image\icons8-e-learning-48.png" alt="">Formation supplimentaire</a>
+            <a href=" #"><img src="assets\image\icons8-evénement-accepté-24.png" alt=""> Nouveautés des clubs</a>
+        </div>
+        <div class="main" id="main">
+                        <div class="nav" id="nav">
+                            <h3>LOGO</h3>
+                            <ul>
+                                <li><a href="#"> Accueil</a></li>
+                                <li><a href="#">Cours</a></li>
+                                <li><a href="#">Mes cours</a></li>
+                                <li><a href="#">Aide</a></li>
+                            </ul>
+                            <div class="block">
+                                <input type="search" name="search" class="search" placeholder="Chercher" id="">
+                                <i class="fa fa-bell" ></i>
+                                <img src="assets\image\user.png" alt="">
+                            </div>
+                        
+                    </div>
+                    <div class="main2">
+                        <div class="cont">
+                            <h1>Choisir votre filiére</h1>
+                            <div>
+                                    {% for filcourse in filcourses %}
+                                        {% if filcourse.prec == 0 %}
+                                        
+                                            <div>
+                                                <button type="button" class="collapsible">{{ filcourse.filiere }}</button>
+                                                <div class="content" style="background-color: rgba(255, 255, 255, 0.5);">
+                                                {% for filcourse1 in filcourses %}
+                                                        {% if filcourse1.prec == filcourse.num %}
+                                                            <div>
+                                                                <button type="button" class="collapsible" style="background-color: transparent;">{{ filcourse1.filiere }}</button>
+                                                                <div class="content"  style="background-color: transparent;">
+                                                                {% for filcourse2 in filcourses %}
+                                                        {% if filcourse2.prec == filcourse1.num %}
+                                                            <div>
+                                                                    <a href="{{ url('matieres',{"ansem":filcourse2.succ}) }}">{{filcourse2.filiere}}</a><br/>
+                                                                    </div>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                            </div>
+                        </div>
+                        <div class="but" style="margin-top: 50px;">
+                        <a href="/ajoutcours">Ajouter un cours</a>
+                        </div>
+                        
+                </div>
                     </div>
                 </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+    </body>
 
     <script>
-       var coll = document.getElementsByClassName("collapsible");
+        const main=document.getElementById('main');
+        const nav=document.getElementById("nav");
+       
+       function f1(){
+        console.log('main');
+        main.classList.add("active");
+        nav.classList.add('ac')
+       }
+       function f2(){
+        console.log('bye');
+        main.classList.remove("active");
+        nav.classList.remove('ac')
+       }
+       
+       
+       const bn=document.querySelectorAll(".bn");
+       contenu=document.querySelectorAll('.nn');
+       bn.forEach(elmnt=>{
+        elmnt.addEventListener("click",function(){
+            bn.forEach(btn=>btn.classList.add('nonact'));
+            bn.forEach(btn=>btn.classList.remove('act'));
+            contenu.forEach(ee=>ee.classList.add('hid'));
+            this.classList.add('act');
+            this.classList.remove('nonact');
+            if(this==bn[0]){
+                contenu[0].classList.remove('hid');
+            }
+            else{
+                contenu[1].classList.remove('hid');
+            }
+        })
+       })
+ 
+          var coll = document.getElementsByClassName("collapsible");
 var i;
 
 for (i = 0; i < coll.length; i++) {
@@ -64,21 +188,14 @@ for (i = 0; i < coll.length; i++) {
     if (content.style.maxHeight){
       content.style.maxHeight = null;
     } else {
-      content.style.maxHeight = content.scrollHeight + "px";
+      content.style.maxHeight ="500px";
     }
   });
 }
-</script>
+     
+    </script>
+    
 {% endblock %}
-{#{% for filcourse1 in filcourses %}
-                            {% if filcourse1.prec == filcourse.num %}
-                                <div>
-                                <p>123</p>
-                                    <button type="button" class="collapsible">{{ filcourse1.filiere }}</button>
-                                    <div class="content">
-                                        <a href="{{ filcourse1.succ }}">1er semestre</a><br/>
-                                        <a href="{{ filcourse1.succ }}">2eme semestre</a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}#}
+
+ 
+   

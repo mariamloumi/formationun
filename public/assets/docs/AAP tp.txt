@@ -1,0 +1,102 @@
+//ex2 -c 
+%%cu
+# define n 1000
+__global__ void addVect(float *in1, float *in2, float *out) 
+{ 
+int i = threadIdx.x + blockIdx.x * blockDim.x; 
+ if(i<n)
+out[i] = in1[i] + in2[i]; 
+} 
+// CPU: 
+#include  <stdio.h>
+int main()  
+{  
+float v1[]={1,2,3,4,5,6,7,8,9,10};  
+float v2[]={1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9};  
+int memsize = sizeof(v1);  
+int vsize = memsize/sizeof(float);  
+float res[vsize];  
+
+float* Cv1; cudaMalloc((void **) &Cv1, memsize);  
+float* Cv2; cudaMalloc((void **) &Cv2, memsize);  
+float* Cres; cudaMalloc((void **) &Cres, memsize);  
+
+cudaMemcpy(Cv1, v1, memsize, cudaMemcpyHostToDevice);  
+cudaMemcpy(Cv2, v2, memsize, cudaMemcpyHostToDevice);  
+
+addVect<<< ceil(n/256), 256>>>(Cv1, Cv2, Cres);  // 2 blocks  
+cudaMemcpy(res, Cres, memsize, cudaMemcpyDeviceToHost);  
+
+int i=0;  
+printf("res= { ");  
+for(i=0; i<vsize; i++) 
+{ 
+printf("%2.2f ", res[i]); 
+}  
+printf("}\n");  
+}
+//ex3
+%%cu
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+#define ARRAY_SIZE  1<<3;
+#define THREADS_PER_BLOCK 256 
+/********************** Initialize input vector **************************/
+void init(int h_in[])
+{
+    for (int i = 0; i < ARRAY_SIZE; i++) 
+    {
+		    h_in[i] = i;
+	  }
+}
+/********************** Cube **************************/
+__global__ void cube(int * d_out, int * d_in) {
+	int i = threadIdx.x + blockIdx.x * blockDim.x;
+	if(i<ARRAY_SIZE) 
+		d_out[i] = d_in[i] * d_in[i] * d_in[i];
+}
+/********************** main **************************/
+int main(int argc, char ** argv) 
+{
+	const int ARRAY_BYTES = ARRAY_SIZE * sizeof(int);
+
+	// generate the input array on the host
+	int h_in[ARRAY_SIZE];
+	init(h_in);
+	int h_out[ARRAY_SIZE];
+
+	// declare GPU memory pointers
+	int * d_in;
+	int * d_out;
+	/* ********************************************************** */
+	/*TODO : allocate GPU memory for input and output arrays*/
+	cudaMalloc(&d_in, ARRAY_BYTES);
+	cudaMalloc(&d_out, ARRAY_BYTES);
+	/* ********************************************************** */
+	/*TDOD : transfer the input array to the GPU
+	cudaMemcpy(d_in, h_in, ARRAY_BYTES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_outn, h_out, ARRAY_BYTES, cudaMemcpyHostToDevice); 
+	/* ********************************************************** */
+	/*TODO : launch the kernel*/
+	 int blocks = ARRAY_SIZE + THREADS_PER_BLOCK - 1 ;
+    cube<<<blocks, THREADS_PER_BLOCK>>>(d_out, d_in);
+	/* ********************************************************** */
+	/*TODO : copy back the result array to the CPU*/
+	 cudaMemcpy(h_out, d_out, ARRAY_BYTES, cudaMemcpyDeviceToHost);
+	// print out the resulting array
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		printf("%d", h_out[i]);
+		printf(((i % 4) != 3) ? "\t" : "\n");
+	}
+	
+	/* ********************************************************** */
+	/*TODO : Free GPU memory*/
+
+    cudaFree(d_in); 
+    cudaFree(d_out);
+
+	return 0;
+}
+/********************** End **************************/
